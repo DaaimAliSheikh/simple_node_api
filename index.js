@@ -23,7 +23,7 @@ app.get("/properties", async (req, res) => {
 app.get("/", (req, res) => {
   res.json({
     message: "Welcome to Simple Express API",
-    endpoints: ["/api/hello"],
+    endpoints: ["/properties"],
   });
 });
 
