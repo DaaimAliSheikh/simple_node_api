@@ -1,9 +1,11 @@
-const { default: axios } = require("axios");
+// index.js
 const express = require("express");
-const serverless = require("serverless-http");
-
 const app = express();
 
+// Middleware to parse JSON
+app.use(express.json());
+
+// Simple GET route
 app.get("/properties", async (req, res) => {
   const { data } = await axios.get(
     "https://search-listings-production.up.railway.app/v1/properties",
@@ -16,15 +18,22 @@ app.get("/properties", async (req, res) => {
   );
   res.json({ data });
 });
-// Export for Vercel
-module.exports.handler = serverless(app);
 
-// Enable local dev with `node api/index.js`
-if (require.main === module) {
-  const PORT = process.env.PORT || 3000;
+// Root route
+app.get("/", (req, res) => {
+  res.json({
+    message: "Welcome to Simple Express API",
+    endpoints: ["/api/hello"],
+  });
+});
+
+// For local development
+const PORT = process.env.PORT || 3000;
+if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () => {
-    console.log(
-      `Express API is running locally on http://localhost:${PORT}/api/hello`
-    );
+    console.log(`Server running on port ${PORT}`);
   });
 }
+
+// Export for Vercel
+module.exports = app;
